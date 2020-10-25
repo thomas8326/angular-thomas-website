@@ -1,7 +1,7 @@
 import { Directive, HostListener, ElementRef, Renderer2, Host, Output, EventEmitter } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { connectableObservableDescriptor } from 'rxjs/internal/observable/ConnectableObservable';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, fromEvent } from 'rxjs';
 import { distinctUntilChanged } from 'rxjs/operators';
 
 @Directive({
@@ -13,40 +13,14 @@ export class DropzoneDirective {
 
   private readonly dropzone$$ = new BehaviorSubject(false);
 
-  @HostListener('dragenter', ['$event']) onDragenter(event: DragEvent) {
-    // event.preventDefault();
-    // event.stopPropagation();
-    this.dropzone$$.next(true);
-    // this.createZone();
-
-  }
-
-  @HostListener('dragover', ['$event']) onDragover(event: DragEvent) {
-    event.preventDefault();
-    // event.stopPropagation();
-    this.dropzone$$.next(true);
-    // this.createZone();
-  }
-
-  @HostListener('dragleave', ['$event']) onDragleave(event) {
-
-    console.log(event);
-    this.dropzone$$.next(false)
-    // this.removeZone();
-  }
-
-  @HostListener('drop', ['$event']) onDrop(event: DragEvent) {
-    event.preventDefault();
-    event.stopPropagation();
-    this.dropzone$$.next(false);
-    this.removeZone();
-    this.fileDropped.emit(event.dataTransfer.files);
-  }
-
   constructor(
     private readonly elementRef: ElementRef,
     private readonly renderer2: Renderer2,
   ) {
+    this.dragEnterEvent();
+    this.dragOverEvent();
+    this.dragLeaveEvent();
+    this.dragDropEvent();
     this.dropzone$$.pipe(distinctUntilChanged()).subscribe(isShowdropzone => {
       if (isShowdropzone) {
         this.createZone();
@@ -55,6 +29,31 @@ export class DropzoneDirective {
       }
     })
 
+  }
+
+  private dragEnterEvent() {
+    fromEvent(this.elementRef.nativeElement, 'dragenter').subscribe(event => this.dropzone$$.next(true));
+  }
+
+  private dragOverEvent() {
+    fromEvent(this.elementRef.nativeElement, 'dragover').subscribe((event: DragEvent) => {
+      event.preventDefault();
+      this.dropzone$$.next(true);
+    });
+  }
+
+  private dragLeaveEvent() {
+    fromEvent(this.elementRef.nativeElement, 'dragleave').subscribe(event => this.dropzone$$.next(false))
+  }
+
+  private dragDropEvent() {
+    fromEvent(this.elementRef.nativeElement, 'drop').subscribe((event: DragEvent) => {
+      event.preventDefault();
+      event.stopPropagation();
+      this.dropzone$$.next(false);
+      this.removeZone();
+      this.fileDropped.emit(event.dataTransfer.files);
+    })
   }
 
   private removeZone() {
