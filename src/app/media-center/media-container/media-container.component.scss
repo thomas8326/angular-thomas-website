@@ -1,5 +1,6 @@
 .media-container {
     display: grid;
     grid-template-columns: 1fr 300px;
-    grid-column-gap: 30px
+    grid-column-gap: 30px;
+    height: 100%;
 }

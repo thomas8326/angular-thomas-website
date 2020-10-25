@@ -1,15 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input, OnChanges } from '@angular/core';
 
 @Component({
   selector: 'app-media-showroom',
   templateUrl: './media-showroom.component.html',
   styleUrls: ['./media-showroom.component.scss']
 })
-export class MediaShowroomComponent implements OnInit {
+export class MediaShowroomComponent {
+
+  @Input() showImage: string;
 
   constructor() { }
-
-  ngOnInit(): void {
-  }
 
 }

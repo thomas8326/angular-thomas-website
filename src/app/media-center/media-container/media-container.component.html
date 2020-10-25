@@ -1,5 +1,5 @@
 <div class="header">Media Center</div>
 <div class="media-container">
-    <app-media-showroom></app-media-showroom>
-    <app-media-gallery></app-media-gallery>
+    <app-media-showroom [showImage]="selectImage"></app-media-showroom>
+    <app-media-gallery (imageChanged)="getImage($event)"></app-media-gallery>
 </div>

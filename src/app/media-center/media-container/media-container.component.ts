@@ -7,9 +7,15 @@ import { Component, OnInit } from '@angular/core';
 })
 export class MediaContainerComponent implements OnInit {
 
+  selectImage: string;
+
   constructor() { }
 
   ngOnInit(): void {
   }
 
+  getImage(image: string) {
+    console.log(image);
+    this.selectImage = image;
+  }
 }

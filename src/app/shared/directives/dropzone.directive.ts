@@ -14,8 +14,8 @@ export class DropzoneDirective {
   private readonly dropzone$$ = new BehaviorSubject(false);
 
   @HostListener('dragenter', ['$event']) onDragenter(event: DragEvent) {
-    event.preventDefault();
-    event.stopPropagation();
+    // event.preventDefault();
+    // event.stopPropagation();
     this.dropzone$$.next(true);
     // this.createZone();
 
@@ -23,14 +23,13 @@ export class DropzoneDirective {
 
   @HostListener('dragover', ['$event']) onDragover(event: DragEvent) {
     event.preventDefault();
-    event.stopPropagation();
+    // event.stopPropagation();
     this.dropzone$$.next(true);
     // this.createZone();
   }
 
   @HostListener('dragleave', ['$event']) onDragleave(event) {
-    event.preventDefault();
-    event.stopPropagation();
+
     console.log(event);
     this.dropzone$$.next(false)
     // this.removeZone();
