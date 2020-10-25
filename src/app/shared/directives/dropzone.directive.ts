@@ -32,18 +32,31 @@ export class DropzoneDirective {
   }
 
   private dragEnterEvent() {
-    fromEvent(this.elementRef.nativeElement, 'dragenter').subscribe(event => this.dropzone$$.next(true));
+    fromEvent(this.elementRef.nativeElement, 'dragenter').subscribe((event: DragEvent) => {
+      event.preventDefault();
+      event.stopPropagation();
+      this.addPointerEvent();
+      this.dropzone$$.next(true);
+    });
   }
 
   private dragOverEvent() {
     fromEvent(this.elementRef.nativeElement, 'dragover').subscribe((event: DragEvent) => {
       event.preventDefault();
+      event.stopPropagation();
+
+      this.addPointerEvent();
       this.dropzone$$.next(true);
     });
   }
 
   private dragLeaveEvent() {
-    fromEvent(this.elementRef.nativeElement, 'dragleave').subscribe(event => this.dropzone$$.next(false))
+    fromEvent(this.elementRef.nativeElement, 'dragleave').subscribe((event: DragEvent) => {
+      event.preventDefault();
+      event.stopPropagation();
+      this.removePointerEvent();
+      this.dropzone$$.next(false);
+    })
   }
 
   private dragDropEvent() {
@@ -51,6 +64,7 @@ export class DropzoneDirective {
       event.preventDefault();
       event.stopPropagation();
       this.dropzone$$.next(false);
+      this.removePointerEvent();
       this.removeZone();
       this.fileDropped.emit(event.dataTransfer.files);
     })
@@ -62,5 +76,15 @@ export class DropzoneDirective {
 
   private createZone() {
     this.renderer2.addClass(this.elementRef.nativeElement, 'dropzone');
+  }
+
+  private addPointerEvent() {
+    const elements = this.elementRef.nativeElement.querySelectorAll('*');
+    elements.forEach(element => this.renderer2.setStyle(element, 'pointer-events', 'none'));
+  }
+
+  private removePointerEvent() {
+    const elements = this.elementRef.nativeElement.querySelectorAll('*');
+    elements.forEach(element => this.renderer2.removeStyle(element, 'pointer-events'));
   }
 }
