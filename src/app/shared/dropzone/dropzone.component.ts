@@ -32,6 +32,7 @@ export class DropzoneComponent implements AfterViewInit {
       .subscribe((event: DragEvent) => {
         event.preventDefault();
         event.stopPropagation();
+        this.showOverlay = false;
         if (!!event.dataTransfer.files.length) {
           this.fileDropped.emit(event.dataTransfer.files);
         }
