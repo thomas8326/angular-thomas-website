@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, OnInit, Renderer2, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, EventEmitter, Output, Renderer2, ViewChild } from '@angular/core';
 
 import { fromEvent, merge } from 'rxjs';
 import { first, switchMap, tap } from 'rxjs/operators';
@@ -9,6 +9,8 @@ import { first, switchMap, tap } from 'rxjs/operators';
   styleUrls: ['./dropzone.component.scss'],
 })
 export class DropzoneComponent implements AfterViewInit {
+  @Output() fileDropped = new EventEmitter<FileList>();
+
   @ViewChild('dropzone') dropzone: ElementRef<any>;
   showOverlay = false;
 
@@ -17,9 +19,8 @@ export class DropzoneComponent implements AfterViewInit {
   ngAfterViewInit(): void {
     fromEvent(this.elementRef.nativeElement, 'dragenter')
       .pipe(
-        tap((event: DragEvent) => {
+        tap(() => {
           this.showOverlay = true;
-          console.log('enter');
         }),
         switchMap(() =>
           merge(
@@ -31,7 +32,9 @@ export class DropzoneComponent implements AfterViewInit {
       .subscribe((event: DragEvent) => {
         event.preventDefault();
         event.stopPropagation();
-        this.showOverlay = false;
+        if (!!event.dataTransfer.files.length) {
+          this.fileDropped.emit(event.dataTransfer.files);
+        }
       });
 
     fromEvent(this.dropzone.nativeElement, 'dragover').subscribe((event: DragEvent) => {
