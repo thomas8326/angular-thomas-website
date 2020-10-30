@@ -1,10 +1,18 @@
-<div class="container" appDropzone (fileDropped)="uploadFiles($event)">
+<div class="container">
+  <app-dropzone (fileDropped)="uploadFiles($event)">
     <div class="gallery" #gallery>
-        <div *ngFor="let image of images" class="image">
-            <img [class.selected]="gallery.selected === image" [src]="image"
-                onerror="this.src = '../../../assets/icon/attention.png'"
-                (click)="selectImage(image); gallery.selected = image" />
-        </div>
-        <div *ngFor="let image of emptyImages" class="emptyImages"></div>
+      <app-media-add-blocker class="image"></app-media-add-blocker>
+      <div
+        cdkDrag
+        *ngFor="let image of images"
+        class="image"
+        [class.selected]="gallery.selected === image"
+        (click)="selectImage(image); gallery.selected = image"
+      >
+        <img [src]="image" class="background-image" onerror="this.src = '../../../assets/icon/attention.png'" />
+        <img class="show-image" [src]="image" onerror="this.src = '../../../assets/icon/attention.png'" />
+      </div>
+      <div cdkDrag *ngFor="let image of emptyImages" class="emptyImages"></div>
     </div>
+  </app-dropzone>
 </div>

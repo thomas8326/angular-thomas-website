@@ -2,4 +2,9 @@
   <ng-content></ng-content>
 </div>
 
-<div [hidden]="!showOverlay" class="dropzone" #dropzone></div>
+<div class="overlay" [class.dropzone]="showOverlay" #dropzone>
+  <svg>
+    <image href="/assets/icon/defaultImage.svg"></image>
+  </svg>
+  <label>Drag and drop file</label>
+</div>
