@@ -4,15 +4,17 @@
       <app-media-add-blocker class="image"></app-media-add-blocker>
       <div
         cdkDrag
-        *ngFor="let image of images"
-        class="image"
+        *ngFor="let image of emptyImages; let i = index"
+        class="emptyImages"
         [class.selected]="gallery.selected === image"
         (click)="selectImage(image); gallery.selected = image"
+        (cdkDragStarted)="onDragStart()"
+        (cdkDragMoved)="onDragMove($event, i)"
       >
-        <img [src]="image" class="background-image" onerror="this.src = '../../../assets/icon/attention.png'" />
-        <img class="show-image" [src]="image" onerror="this.src = '../../../assets/icon/attention.png'" />
+        <!-- <img [src]="image" class="background-image" onerror="this.src = '../../../assets/icon/attention.png'" />
+        <img class="show-image" [src]="image" onerror="this.src = '../../../assets/icon/attention.png'" /> -->
       </div>
-      <div cdkDrag *ngFor="let image of emptyImages" class="emptyImages"></div>
+      <div *ngFor="let image of emptyImages" class="emptyImages"></div>
     </div>
   </app-dropzone>
 </div>
